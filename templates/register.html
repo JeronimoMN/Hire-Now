@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - hireNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function mostrarFormulario(tipo) {
+            document.getElementById("formulario-registro").classList.remove("hidden");
+            document.getElementById("tipo_usuario").value = tipo;
+            document.getElementById("seleccion-tipo").classList.add("hidden");
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Registro en hireNow</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="mb-4">
+      {% for category, message in messages %}
+        <div class="p-4 rounded text-sm font-medium
+                    {% if category == 'success' %}
+                      bg-green-100 text-green-800
+                    {% elif category == 'error' %}
+                      bg-red-100 text-red-800
+                    {% else %}
+                      bg-gray-100 text-gray-800
+                    {% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+        <!-- Selección inicial -->
+        <div id="seleccion-tipo" class="flex flex-col gap-4">
+            <p class="text-center text-gray-700">¿Cómo deseas registrarte?</p>
+            <button onclick="mostrarFormulario('1')"
+                class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
+                Como Aspirante
+            </button>
+            <button onclick="mostrarFormulario('2')"
+                class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition">
+                Como Empresa
+            </button>
+        </div>
+
+        <!-- Formulario -->
+        <form id="formulario-registro" class="hidden flex flex-col gap-4 mt-4" method="POST" action="{{ url_for('users.register') }}">
+            <input type="hidden" name="role" id="tipo_usuario">
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input type="text" name="name" required class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Apellido</label>
+                <input type="text" name="last_name" required class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" name="email" required class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" name="password" required class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Confirmar Contraseña</label>
+                <input type="password" name="confirm_password" required class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <button type="submit"
+                class="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
+                Registrarse
+            </button>
+        </form>
+    </div>
+</body>
+</html>
