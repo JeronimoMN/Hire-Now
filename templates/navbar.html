@@ -7,6 +7,6 @@
     <!-- Derecha: Usuario -->
     <div class="flex items-center space-x-3">
         <span class="text-gray-700 font-medium">{{ user }}</span>
-
+        <a href="{{ url_for('users.logout') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-200">Salir Sesión</a>
     </div>
 </nav>

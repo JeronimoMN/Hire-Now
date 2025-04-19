@@ -1,0 +1,11 @@
+<h2 class="text-2xl font-bold mb-4">Interesados en: {{ post.title }}</h2>
+<ul class="space-y-2">
+    {% set node = applicants.head %}
+    {% while node %}
+        <li class="bg-white p-4 rounded shadow">
+            👤 Usuario ID: {{ node.value.user_id }} <br />
+            🗓️ Fecha: {{ node.value.date }}
+        </li>
+        {% set node = node.next %}
+    {% endwhile %}
+</ul>

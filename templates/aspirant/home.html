@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <title>hireNow | Ofertas</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ url_for('static', filename='aspirant/index.js') }}"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
+    <!--NAVBAR-->
     {% include 'navbar.html' %}  <!-- si lo separaste -->
+
     <div class="flex h-[calc(100vh-72px)]">
         <!-- Columna Izquierda: Lista de ofertas -->
         <div class="w-1/3 bg-white shadow-lg p-6 overflow-y-auto" style="background-color: lavender">
@@ -16,12 +19,13 @@
                 <ul class="space-y-4">
                     {% for offer in offers %}
                         <li>
-                            <button
-                                class="w-full text-left p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
-                                ">
+                           <button
+                                onclick="mostrarDetalle({{ offer.id }}, '{{ offer.title }}', '{{ offer.content }}')"
+                                class="w-full text-left p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition" >
                                 <h3 class="text-lg font-bold text-gray-800">{{ offer.title }}</h3>
                                 <p class="text-sm text-gray-600">{{ offer.content }}</p>
-                            </button>
+                           </button>
+
                         </li>
                     {% endfor %}
                 </ul>
@@ -39,16 +43,6 @@
     </div>
 
     <!-- Script básico para insertar el detalle (puedes mejorarlo luego con AJAX) -->
-    <script>
-        function mostrarDetalle(offerId) {
-            // Ejemplo básico: puedes mejorar esto con Fetch/AJAX más adelante
-            document.getElementById("detalle-oferta").innerHTML = `
-                <div class="text-center text-gray-700">
-                    <h2 class="text-2xl font-bold mb-4">Oferta seleccionada</h2>
-                    <p>ID: 1</p>
-                    <p class="mt-2 text-sm text-gray-500">{{ offer }}</p>
-                </div>`;
-        }
-    </script>
+
 </body>
 </html>

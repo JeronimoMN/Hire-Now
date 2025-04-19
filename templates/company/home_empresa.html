@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>hireNow | Panel de Empresa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ url_for('static', filename = 'company/index.js') }}"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    {% include 'navbar.html' %}
+
+    <div class="flex h-[calc(100vh-72px)]">
+        <!-- Izquierda: Publicaciones -->
+        <div class="w-1/3 bg-white shadow-lg p-4 overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Mis ofertas</h2>
+                <button onclick="openModal()" class="bg-blue-600 text-white text-sm px-3 py-1 rounded hover:bg-blue-700">
+                    Crear
+                </button>
+            </div>
+
+            {% if posts %}
+                <ul class="space-y-4">
+                    {% for post in posts %}
+                        {% set count = 0 %}
+
+                        <li class="bg-gray-100 p-3 rounded-lg shadow-sm">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h3 class="text-md font-bold text-gray-800">{{ post.title }}</h3>
+                                    <p class="text-sm text-gray-600">{{ post.content }}</p>
+                                </div>
+                                {% if vacants %}
+                                    {% set count = namespace(value=0) %}
+                                    {% for vacant in vacants %}
+                                        {% if vacant.post_id == post.id %}
+                                            {% set count.value = count.value + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if count.value > 0 %}
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full h-fit">
+                                            {{ count.value }} interesado{% if count.value != 1 %}s{% endif %}
+                                        </span>
+                                    {% endif %}
+                                {% endif %}
+
+                            </div>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <button onclick="mostrarInteresados('{{ post.id }}')" class="bg-gray-300 text-sm px-2 py-1 rounded hover:bg-gray-400">
+                                    Ver interesados
+                                </button>
+                                <form method="POST" action="{{ url_for('company_hire.delete_vacant', id=post.id) }}">
+                                    <button type="submit" class="bg-red-600 text-white text-sm px-2 py-1 rounded hover:bg-red-700">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-600">Aún no has publicado ninguna oferta.</p>
+            {% endif %}
+        </div>
+
+        <!-- Derecha: Detalle/interesados -->
+        <div class="flex-1 p-8 overflow-y-auto" id="detalle-oferta">
+            <div class="text-gray-500 text-center mt-20">
+                <p class="text-lg">Selecciona una oferta para ver los interesados.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="createVacantModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+        <div class="bg-white p-6 rounded-lg w-full max-w-md shadow-xl relative">
+            <h2 class="text-xl font-semibold mb-4">Nueva Vacante</h2>
+
+            <form action="/create_vacant" method="POST" class="space-y-4">
+                <div>
+                    <label for="title" class="block text-sm font-medium">Título</label>
+                    <input type="text" name="title" id="title" required class="w-full border p-2 rounded" />
+                </div>
+
+                <div>
+                    <label for="content" class="block text-sm font-medium">Descripción</label>
+                    <textarea name="content" id="content" required class="w-full border p-2 rounded"></textarea>
+                </div>
+
+                <div>
+                    <label for="skills" class="block text-sm font-medium">Habilidades requeridas</label>
+                    <input type="text" name="skills" id="skills" required class="w-full border p-2 rounded" />
+                </div>
+
+                <div>
+                    <label for="city" class="block text-sm font-medium">Ciudad</label>
+                    <select name="city" id="city" class="w-full border p-2 rounded">
+                        {% for city in cities %}
+                            <option value="{{ city.id }}">{{ city.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancelar</button>
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Crear</button>
+                </div>
+            </form>
+
+            <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-black">&times;</button>
+        </div>
+    </div>
+
+
+</body>
+</html>

@@ -1,10 +1,9 @@
 from flask import (Blueprint,
                    request,
                    render_template,
-                   flash,
                    redirect,
                    url_for,
-                   jsonify, session)
+                   session, flash)
 
 from models import Users, db
 
@@ -26,9 +25,9 @@ def register():
         db.session.commit()
 
 
-        return redirect(url_for('login', role = role))
+        return redirect(url_for('users.login', role = role))
 
-    return render_template('register.html'), 200
+    return render_template('auth/register.html'), 200
 
 @users_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -45,17 +44,10 @@ def login():
             session['user_id'] = user.id
 
             return redirect(url_for('hire.redirect_home'))
-
-
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 @users_bp.route('/logout', methods=['GET', 'POST'])
 def logout():
-    return 'Method Allowed', 200
-
-@users_bp.route('/delete-user', methods  = ['GET', 'POST'])
-def delete_user():
-    return 'OK', 200
-
-def change_profile():
-    return 'OK', 200
+    session.pop('user', None)
+    flash('You have been logged out', 'success')
+    return redirect(url_for('users.login'))

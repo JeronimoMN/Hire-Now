@@ -51,3 +51,16 @@ class Cities(db.Model):
     __tablename__ = 'cities'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
+
+class Applications(db.Model):
+    __tablename__ = 'applications'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
+    status = db.Column(db.String(50), default='pending')  # Opcional: 'pending', 'reviewed', etc.
+
+    def __repr__(self):
+        return f"<Application id={self.id}, user_id={self.user_id}, post_id={self.post_id}, created_id={self.created_at}, status = {self.status}>"
+
+
