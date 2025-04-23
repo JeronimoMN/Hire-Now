@@ -24,7 +24,6 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-
         return redirect(url_for('users.login', role = role))
 
     return render_template('auth/register.html'), 200

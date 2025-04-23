@@ -10,6 +10,7 @@ from flask import (Blueprint,
                    jsonify)
 
 from models import Posts, Cities, db, Applications, Users
+from services.email_service import EmailSender
 from utils.data_structures import SingledList
 
 company_bp = Blueprint('company_hire', __name__)
@@ -108,8 +109,16 @@ def deny_applicant():
         post_id=post_id
     ).first()
 
+    print(application)
+
+    user = Users.query.get(applicant_id)
+    sendRs = EmailSender()
+    sendRs.send_application_email( 'ok', user.email)
+
+
     if not application:
         return jsonify({"status": "error", "message": "Solicitud no encontrada"}), 404
+
 
     # Actualiza el estado a "deny" (o el campo que uses)
     application.status = "deny"  # Ajusta según tu modelo
